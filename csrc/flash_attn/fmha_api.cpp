@@ -154,6 +154,7 @@ mha_fwd(const at::Tensor &q,         // total_q x num_heads x head_size, total_q
         const int num_splits,
         c10::optional<at::Generator> gen_) {
 
+    auto dprops = at::cuda::getCurrentDeviceProperties();
     auto stream = at::cuda::getCurrentCUDAStream().stream();
     bool is_dropout = p_dropout > 0.0;
     Launch_params<FMHA_fprop_params> launch_params(dprops, stream, is_dropout, return_softmax);
@@ -165,6 +166,7 @@ mha_fwd(const at::Tensor &q,         // total_q x num_heads x head_size, total_q
     const int num_heads = sizes[H_DIM];
     const int head_size = sizes[D_DIM];
     const int total_k = k.size(TOTAL_DIM);
+    TORCH_CHECK(batch_size > 0);
     TORCH_CHECK((head_size % 8 == 0) && (head_size <= 128));
 
     CHECK_SHAPE(q, total_q, num_heads, head_size);
