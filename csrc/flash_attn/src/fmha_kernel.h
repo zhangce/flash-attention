@@ -51,10 +51,10 @@ struct BlockInfoPadded {
         : bidb(bidb), bidh(bidh), h(params.h) {
 
         // The block index.
-        sum_s_k = params.cu_seqlens_k[bidb];
-        actual_seqlen_k = params.cu_seqlens_k[bidb + 1] - sum_s_k;
-        sum_s_q = params.cu_seqlens_q[bidb];
-        actual_seqlen_q = params.cu_seqlens_q[bidb + 1] - sum_s_q;
+        sum_s_k = params.start_seq_k[bidb];
+        actual_seqlen_k = params.end_seq_k[bidb] - sum_s_k;
+        sum_s_q = params.start_seq_q[bidb];
+        actual_seqlen_q = params.end_seq_q[bidb] - sum_s_q;
 
         tidx_global = (bidb * params.h + bidh) * THREADS_PER_CTA + tidx;
     }
